@@ -8,7 +8,7 @@ It includes some scripts I created for those activities.
 I use this repo as a git submodule on my dotfiles.  
 The following command is isued on the dotfiles repo, to have this one as a submodule.
 ```shell
-git submodule add git@github.com:pncolvr/dotfiles-waybar.git .config/waybar
+git submodule add git@github.com:pncolvr/dotfiles-rofi.git .config/rofi
 ```
 
 ## When cloning a "parent repo" to include the submodules
