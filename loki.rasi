@@ -1,0 +1,6 @@
+configuration {
+    show-icons:      false;
+    display-drun:    "";
+    disable-history: false;
+    dpi: 144;
+}

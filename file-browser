@@ -1,0 +1,9 @@
+cmd        "xdg-open"
+oc-cmd     "code;icon:code"
+oc-cmd     "google-chrome-stable;icon:google-chrome-stable"
+oc-cmd     "vivaldi-stable;icon:vivaldi-stable"
+oc-cmd     "feh --auto-zoom --fullscreen --start-at;icon:feh"
+oc-cmd     "gimp;icon:gimp"
+depth      1
+
+open-parent-as-self

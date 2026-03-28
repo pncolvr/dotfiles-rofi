@@ -1,0 +1,2 @@
+@import "<hostname>.rasi"
+@theme "/usr/share/rofi/themes/purple.rasi"

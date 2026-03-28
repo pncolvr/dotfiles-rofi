@@ -1,0 +1,31 @@
+{
+  "baseRDPParams": "dynamic-resolution /cert:ignore /clipboard /gfx:AVC420:off,AVC444:off,RFX:on,progressive:on /gdi:sw -grab-keyboard -grab-mouse -mouse-motion",
+  "hosts": [
+    {
+      "name": " ",
+      "category": "",
+      "type": "remote",
+      "endpoint": "",
+      "port": 3389,
+      "displayName": "",
+      "hopHost": "",
+      "hopUsername":"",
+      "sshKeyPath": "",
+      "rdpParams":"",
+      "username": "",
+      "password": "",
+      "domain": ""
+    },
+    {
+      "name": "",
+      "category": "",
+      "type": "vm",
+      "endpoint": "",
+      "port": 3389,
+      "displayName": "",
+      "vmName": "",
+      "username": "",
+      "password": ""
+    }
+  ]
+}

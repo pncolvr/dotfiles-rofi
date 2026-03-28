@@ -1,0 +1,3 @@
+@import "L3-37.rasi"
+//@theme "~/.config/rofi/themes/dtos-center.rasi"
+@theme "/home/pncolvr/.config/rofi/themes/dracula.rasi"
