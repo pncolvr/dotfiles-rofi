@@ -7,9 +7,9 @@ configuration {
 }
 
 * {
-    font: "Jetbrains Mono 12";
+    font: "Jetbrains Mono 11";
     foreground: #f8f8f2;
-    background-color: rgba(0,0,0,1);
+    background-color: rgba(0,0,0,0.5);
     active-background: #6272A4;
     urgent-background: #ff5555;
     urgent-foreground: @background-color;
@@ -23,7 +23,7 @@ configuration {
 #window {
     background-color: @background-color;
     border:           0;
-    border-radius:    3;
+    border-radius:    0 0 6px 6px;
     border-color:     @bordercolor;
     padding:          0;
     location:         north;
