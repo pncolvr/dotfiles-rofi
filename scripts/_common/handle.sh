@@ -3,26 +3,32 @@
 WORKSPACE=$(echo "$0" | xargs realpath | xargs dirname)
 source "$WORKSPACE"/utils.sh
 
-load_assoc_array "links" "$1"
-keys=$(get_array_keys "links")
-# shellcheck disable=2154
-if [[ ${#links[@]} -gt 1 ]]; then
-    chosen=$(printf '%s\n' "${keys[@]}" | sort | rofi -dmenu -case-smart -sort -sorting-method fzf -p "")
-    # chosen=$(printf '%s\n' "${keys[@]}" | sort | rofi -dmenu -case-smart -sort -sorting-method fzf -p "$2")
-else 
+FILE="$1"
+
+function handle_sort() {
+    [[ "$SORT" == false ]] && cat || sort
+}
+
+IFS=';' read PROMPT ACTION ALLOW_TYPED SORT <<< "$(jq -r ' [ .prompt, .action, .allowTyped, .sort ] | join(";")' "$FILE")"
+
+mapfile -t keys < <(jq -r '.items[] | .title' "$FILE")
+
+if [[ ${#keys[@]} -gt 1 ]]; then
+    chosen=$(printf '%s\n' "${keys[@]}" | handle_sort | rofi -dmenu -no-sort -case-smart -p "$PROMPT")
+    # chosen=$(printf '%s\n' "${keys[@]}" | handle_sort | rofi -dmenu -case-smart -sort -sorting-method fzf -p "$PROMPT")
+else
     chosen="${keys[0]}"
 fi
-action="$3"
-allow_typed="$4"
+
 if [[ -n "$chosen" ]]; then
-    picked="${links[$chosen]}"
-    if [[ -n "$picked" ]]; then 
-        case $action in
+    picked=$(jq -r --arg title "$chosen" '.items[] | select(.title==$title) | .result' "$FILE" )
+    if [[ -n "$picked" ]]; then
+        case $ACTION in
             output) echo "$picked";;
             default|*)  open_url "$picked";;
         esac
-    else 
-        if [[ $allow_typed == true ]]; then
+    else
+        if [[ $ALLOW_TYPED == true ]]; then
             open_url "$chosen"
         fi
     fi

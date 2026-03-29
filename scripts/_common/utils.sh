@@ -1,46 +1,5 @@
 #!/usr/bin/env bash
 
-
-function save_assoc_array() {
-    local array_name="$1" file="$2"
-    if [[ $(declare -p "$array_name" 2>/dev/null) != declare\ -A* ]]; then
-        echo "Not an associative array: $array_name" >&2
-        return 1
-    fi
-    declare -n _arr="$array_name"
-    : >"$file"
-    local k
-    for k in "${!_arr[@]}"; do
-        printf '"%s"="%s"\n' "$k" "${_arr[$k]}" >>"$file"
-    done
-}
-
-function load_assoc_array() {
-    local array_name="$1" file="$2"
-    declare -gA "$array_name"
-    declare -n _arr="$array_name"
-    local line key val k v
-    while read -r line; do
-        [[ -z $line || $line == \#* ]] && continue
-        key=${line%%=*}
-        val=${line#*=}
-        if [[ $key == \"*\" && $key == *\" && $val == \"*\" && $val == *\" ]]; then
-            k=${key:1:${#key}-2}
-            v=${val:1:${#val}-2}
-            _arr["$k"]="$v"
-            continue
-        fi
-
-    done <"$file"
-}
-
-function get_array_keys() {
-    local array_name="$1"
-    # shellcheck disable=2178
-    declare -n _arr="$array_name"
-    printf '%s\n' "${!_arr[@]}"
-}
-
 function open_url() {
     "$HOME"/Projects/scripts/default-browser/default-browser.sh "$@"
 }

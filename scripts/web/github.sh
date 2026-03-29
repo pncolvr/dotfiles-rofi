@@ -3,33 +3,35 @@
 WORKSPACE=$(echo "$0" | xargs realpath | xargs dirname | xargs dirname)/_common
 source "$WORKSPACE"/utils.sh
 
-projects_json="${XDG_CACHE_HOME:-$HOME/.cache}/code_projects_${USER}.json"
+PROJECT_JSON="${XDG_CACHE_HOME:-$HOME/.cache}/code_projects_${USER}.json"
+TEMPLATE_JSON='{
+    "prompt": "",
+    "action": "default",
+    "allowTyped": false,
+    "sort": true
+}'
 
 function get_projects_urls() {
   local ignoredCategory="${1:-}"
 
   if [[ -z "$ignoredCategory" ]]; then
-    jq -r '.[] | .url' "$projects_json"
+     jq '[.[] | select(.url != null) | {name, url}]' "$PROJECT_JSON"
     return
   fi
 
-  jq -r --arg ignoredCategory "$ignoredCategory" \
-    '.[] | select(.category != $ignoredCategory) | .url' "$projects_json"
+  jq --compact-output --arg ignoredCategory "$ignoredCategory" \
+     '[.[] | select(.category != $ignoredCategory and .url != null) | {name, url}]' "$PROJECT_JSON"
 }
 
-declare -A menu_items=()
 
-if [[ ! -f "$projects_json" ]]; then
-    echo "Projects JSON file not found: $projects_json" >&2
+if [[ ! -f "$PROJECT_JSON" ]]; then
+    echo "Projects JSON file not found: $PROJECT_JSON" >&2
     exit 1
 fi
 
-while IFS= read -r git_url; do
-    repo_path="$(basename "$git_url")"
-    menu_items+=(["$repo_path"]="$git_url")
-done < <(get_projects_urls $1 | sort -u)
+links_file=$(get_temp_file_named $(basename "$0"))
+items_json=$(jq 'map({title: .name, result: .url})' < <(get_projects_urls $1))
 
-linksFile=$(get_temp_file_named $( basename "$0"))
-save_assoc_array "menu_items" "$linksFile"
+final_json=$(jq -n --argjson items "$items_json" --argjson template "$TEMPLATE_JSON" '$template + {items: $items}')
 
-"$WORKSPACE"/handle.sh "$linksFile" "github"
+"$WORKSPACE"/handle.sh "$links_file"

@@ -3,14 +3,16 @@
 filename=$(echo "${0%.*}" | xargs basename)
 WORKSPACE=$(echo "$0" | xargs realpath | xargs dirname | xargs dirname)/_common
 
-source "$WORKSPACE"/utils.sh
-
 CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/azure_${USER}"
+TEMPLATE_JSON='{
+    "prompt": "",
+    "action": "default",
+    "allowTyped": false,
+    "sort": true
+}'
 
 build_cache() {
     echo "Building cache..."
-    
-    # Start Azure tools container and get subscription data
     podman run -d --replace --name azure-tools \
         -v azure-tools-azure:/home/vscode/.azure \
         -v "/home/pncolvr/Projects/scripts/azure/updateip":/workspaces/scripts/azure/updateip \
@@ -18,24 +20,11 @@ build_cache() {
         --restart=unless-stopped \
         updateip:latest sleep infinity
 
-    # Get JSON output and parse into associative array
     json_output=$(podman exec -it azure-tools /workspaces/scripts/azure/updateip/scripts/list-subs.sh | sed -n '/^\[/,$p' | tr -d '\r')
+    items_json=$(jq 'map({title: .name, result: ("https://portal.azure.com/#@teambizdocs.onmicrosoft.com/resource/subscriptions/" + .id + "/resources")})' <<< "$json_output")
+    final_json=$(jq -n --argjson items "$items_json" --argjson template "$TEMPLATE_JSON" '$template + {items: $items}')
 
-    declare -A links
-    # Use jq to properly parse JSON and extract name-id pairs
-    while IFS=$'\t' read -r name id; do
-        if [[ -n "$name" && -n "$id" ]]; then
-            links["$name"]="$id"
-        fi
-    done < <(echo "$json_output" | jq -r '.[] | [.name, .id] | @tsv')
-
-    # Convert subscription IDs to Azure portal URLs
-    for key in "${!links[@]}"; do
-        links["$key"]="https://portal.azure.com/#@teambizdocs.onmicrosoft.com/resource/subscriptions/${links[$key]}/resources"
-        echo "Found subscription '$key'"
-    done
-
-    save_assoc_array "links" "$CACHE_FILE"
+    echo "$final_json" > "$CACHE_FILE"
     echo "Cache saved: $CACHE_FILE"
 }
 
@@ -61,5 +50,5 @@ if $pick; then
         build_cache
     fi
     
-    "$WORKSPACE"/handle.sh "$CACHE_FILE" ""
+    "$WORKSPACE"/handle.sh "$CACHE_FILE"
 fi
