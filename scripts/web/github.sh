@@ -34,4 +34,6 @@ items_json=$(jq 'map({title: .name, result: .url})' < <(get_projects_urls $1))
 
 final_json=$(jq -n --argjson items "$items_json" --argjson template "$TEMPLATE_JSON" '$template + {items: $items}')
 
+echo "$final_json" > "$links_file"
+
 "$WORKSPACE"/handle.sh "$links_file"
