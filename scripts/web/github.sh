@@ -15,12 +15,12 @@ function get_projects_urls() {
   local ignoredCategory="${1:-}"
 
   if [[ -z "$ignoredCategory" ]]; then
-     jq '[.[] | select(.url != null) | {name, url}]' "$PROJECT_JSON"
+    jq '[.[] | select(.url != null) | {url}]' "$PROJECT_JSON" | jq 'unique_by(.url)'
     return
   fi
 
   jq --compact-output --arg ignoredCategory "$ignoredCategory" \
-     '[.[] | select(.category != $ignoredCategory and .url != null) | {name, url}]' "$PROJECT_JSON"
+     '[.[] | select(.category != $ignoredCategory and .url != null) | {url}]' "$PROJECT_JSON" | jq 'unique_by(.url)'
 }
 
 
@@ -30,7 +30,7 @@ if [[ ! -f "$PROJECT_JSON" ]]; then
 fi
 
 links_file=$(get_temp_file_named $(basename "$0"))
-items_json=$(jq 'map({title: .name, result: .url})' < <(get_projects_urls $1))
+items_json=$(jq 'map({title: (.url | split("/") | last), result: .url})' < <(get_projects_urls $1))
 
 final_json=$(jq -n --argjson items "$items_json" --argjson template "$TEMPLATE_JSON" '$template + {items: $items}')
 
