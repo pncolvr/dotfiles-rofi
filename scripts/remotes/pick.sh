@@ -6,8 +6,8 @@ source "$(echo "$WORKSPACE" | xargs dirname)"/_common/utils.sh
 HOSTS_FILE="$WORKSPACE/hosts.json"
 LOCALHOST_SSH=localhost
 
-options=$(jq -r '.hosts | map(.name) | join("|")' "$HOSTS_FILE")
-chosen=$(echo -n "$options|kill|shutdown vm" | rofi -sep '|' -dmenu -case-smart -sort -sorting-method fzf -p "")
+options=$(jq -r '.hosts | map(select(.enabled == true)) |map(.name) | join("|")' "$HOSTS_FILE")
+chosen=$(echo -n "$options|kill|shutdown vm" | rofi -sep '|' -dmenu -case-smart -p "")
 [ -z "$chosen" ] && exit
 
 component="$WORKSPACE/components/options"
