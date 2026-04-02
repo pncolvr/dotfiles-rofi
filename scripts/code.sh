@@ -77,6 +77,7 @@ function focus_window() {
 }
 
 function open_editor() {
+  hyprctl dispatch focuswindow class:code
   code "$1" & disown
 }
 
