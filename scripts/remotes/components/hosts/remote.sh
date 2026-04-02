@@ -13,7 +13,13 @@ function connect_ssh () {
 
 function dns () {
     local endpoint=$1
-    nslookup "$endpoint" | grep Address: | tail -n 1 | awk -F ':' '{print $2}' | xargs
+    local new_endpoint=$(nslookup "$endpoint" | grep Address: | tail -n 1 | awk -F ':' '{print $2}' | xargs)
+
+    if [ -n "$new_endpoint" ]; then
+        echo "$new_endpoint"
+    else
+        echo "$endpoint"
+    fi
 }
 
 function get_random_port () {
