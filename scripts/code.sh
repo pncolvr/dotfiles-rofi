@@ -30,6 +30,12 @@ function pick_path() {
   fi
 }
 
+function get_project_category_by_path() {
+  local path="$1"
+  jq -r --arg path "$path" \
+    '.[] | select(.rootPath == $path) | .category' "$projects"
+}
+
 function get_project_names() {
   local ignoredCategory="${1:-}"
 
@@ -77,8 +83,10 @@ function focus_window() {
 }
 
 function open_editor() {
+  local path="$1"
+  local profile="${2^}"
   hyprctl dispatch focuswindow class:code
-  code "$1" & disown
+  code "$1" --profile "$profile" & disown
 }
 
 function main() {
@@ -86,8 +94,8 @@ function main() {
   local path
   local friendlyName
   local windowAddress
-
   path=$(pick_path "$ignoredCategory")
+
   [[ -z "$path" ]] && exit 0
   friendlyName=$(get_friendly_name "$path")
   windowAddress=$(get_window_address "$friendlyName")
@@ -95,7 +103,9 @@ function main() {
   if [[ -n "$windowAddress" ]]; then
     focus_window "$windowAddress"
   else
-    open_editor "$path"
+    local category
+    category=$(get_project_category_by_path "$path")
+    open_editor "$path" "$category"
   fi
 }
 
