@@ -90,18 +90,18 @@ function open_editor() {
 }
 
 function main() {
-  local ignoredCategory="${1:-}"
+  local ignored_category="${1:-}"
   local path
-  local friendlyName
-  local windowAddress
-  path=$(pick_path "$ignoredCategory")
+  local friendly_name
+  local window_address
+  path=$(pick_path "$ignored_category")
 
   [[ -z "$path" ]] && exit 0
-  friendlyName=$(get_friendly_name "$path")
-  windowAddress=$(get_window_address "$friendlyName")
+  friendly_name=$(get_friendly_name "$path")
+  window_address=$(get_window_address "$friendly_name")
 
-  if [[ -n "$windowAddress" ]]; then
-    focus_window "$windowAddress"
+  if [[ -n "$window_address" ]]; then
+    focus_window "$window_address"
   else
     local category
     category=$(get_project_category_by_path "$path")
