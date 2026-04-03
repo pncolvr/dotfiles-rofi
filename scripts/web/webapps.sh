@@ -8,12 +8,14 @@ selection=$("$WORKSPACE"/handle.sh "$links" )
 
 IFS=';' read action url <<< "$(jq -r '[.action, .url] | join(";")' <<< $selection)"
 
-if [[ "$action" == "qutebrowser-webapp" ]]; then
-    qutebrowser --desktop-file-name qutebrowser-webapp \
-        --target window \
-        -C ~/.config/qutebrowser/config.py \
-        -B ~/.local/share/qutebrowser-webapp \
-        "$url" > /dev/null 2>&1 & disown
-else
-    eval "$action $url"
+if [[ -z "$action" || -z "$url" ]]; then
+    exit
 fi
+
+case "$action" in
+    "qutebrowser-webapp")
+        url="$action $url" 
+        ;;
+esac
+
+$HOME/Projects/scripts/default-browser/default-browser.sh $(printf '%s' "$url")
