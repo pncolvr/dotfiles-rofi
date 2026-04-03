@@ -42,7 +42,7 @@ function _internal_log() {
         1|2|3|4) emitError="--stderr";;
         5|6|7) emitError="";;
     esac
-    logger "$emitError" --priority "$priority" --tag $(basename "$0") $IN
+    logger "$emitError" --priority "$priority" --tag $(basename "${BASH_SOURCE[0]:-0}") $IN
 }
 
 

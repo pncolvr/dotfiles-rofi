@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-WORKSPACE=$(echo "$0" | xargs realpath | xargs dirname)
+WORKSPACE=$(echo "${BASH_SOURCE[0]:-0}" | xargs realpath | xargs dirname)
 
 source "$(echo "$WORKSPACE" | xargs dirname)"/_common/utils.sh
 

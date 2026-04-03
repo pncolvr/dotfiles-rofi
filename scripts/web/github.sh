@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-WORKSPACE=$(echo "$0" | xargs realpath | xargs dirname | xargs dirname)/_common
+WORKSPACE=$(echo "${BASH_SOURCE[0]:-0}" | xargs realpath | xargs dirname | xargs dirname)/_common
 source "$WORKSPACE"/utils.sh
 
 PROJECT_JSON="${XDG_CACHE_HOME:-$HOME/.cache}/code_projects_${USER}.json"
@@ -29,7 +29,7 @@ if [[ ! -f "$PROJECT_JSON" ]]; then
     exit 1
 fi
 
-links_file=$(get_temp_file_named $(basename "$0"))
+links_file=$(get_temp_file_named $(basename "${BASH_SOURCE[0]:-0}"))
 items_json=$(jq 'map({title: (.url | split("/") | last), result: .url})' < <(get_projects_urls $1))
 
 final_json=$(jq -n --argjson items "$items_json" --argjson template "$TEMPLATE_JSON" '$template + {items: $items}')

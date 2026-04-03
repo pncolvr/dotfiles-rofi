@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-WORKSPACE=$(echo "$0" | xargs realpath | xargs dirname | xargs dirname)/_common
+WORKSPACE=$(echo "${BASH_SOURCE[0]:-0}" | xargs realpath | xargs dirname | xargs dirname)/_common
 source "$WORKSPACE"/utils.sh
 
 # on the env file:
@@ -28,6 +28,6 @@ source "$WORKSPACE"/utils.sh
 # const toCopy = JSON.stringify(allItems, null, 2)
 # copy(toCopy)
 
-links=$(realpath $(get_env_file $0))
+links=$(realpath $(get_env_file ${BASH_SOURCE[0]:-0}))
 
 "$WORKSPACE"/handle.sh "$links"
