@@ -18,4 +18,4 @@ case "$action" in
         ;;
 esac
 
-$HOME/Projects/scripts/default-browser/default-browser.sh $(printf '%s' "$url")
+$ZDOTDIR/scripts/default-browser/default-browser.sh $(printf '%s' "$url")

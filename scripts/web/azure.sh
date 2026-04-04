@@ -13,12 +13,12 @@ TEMPLATE_JSON='{
 
 build_cache() {
     echo "Building cache..."
-    podman run -d --replace --name azure-tools \
-        -v azure-tools-azure:/home/vscode/.azure \
-        -v "/home/pncolvr/Projects/scripts/azure/updateip":/workspaces/scripts/azure/updateip \
-        -w /workspaces/scripts/azure/updateip \
+    podman run -d --replace --name portkey \
+        -v portkey-azure:/home/vscode/.azure \
+        -v "/home/pncolvr/Projects/helpers/portkey":/workspaces/scripts/azure/portkey \
+        -w /workspaces/scripts/azure/portkey \
         --restart=unless-stopped \
-        updateip:latest sleep infinity
+        portkey:latest sleep infinity
 
     json_output=$(podman exec -it azure-tools /workspaces/scripts/azure/updateip/scripts/list-subs.sh | sed -n '/^\[/,$p' | tr -d '\r')
     items_json=$(jq 'map({title: .name, result: ("https://portal.azure.com/#@teambizdocs.onmicrosoft.com/resource/subscriptions/" + .id + "/resources")})' <<< "$json_output")

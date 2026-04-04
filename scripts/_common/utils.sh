@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 function open_url() {
-    "$HOME"/Projects/scripts/default-browser/default-browser.sh "$@"
+    "$ZDOTDIR"/scripts/default-browser/default-browser.sh "$@"
 }
 
 function get_temp_dir() {
