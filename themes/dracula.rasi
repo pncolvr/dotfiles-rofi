@@ -7,15 +7,15 @@ configuration {
 }
 
 * {
-    font: "Jetbrains Mono 11";
-    foreground: #f8f8f2;
-    input-foreground: #6272A4;
-    selected-foregound: #6272A4;
+    font: "Jetbrains Mono 10";
+    foreground: #f2f2f2;
+    input-foreground: @foreground;
+    selected-foregound: #000000;
     background-color: rgba(0,0,0, 0.4);
     active-background: #6272A4;
     urgent-background: #ff5555;
     urgent-foreground: @background-color;
-    selected-background: #252526;
+    selected-background: @foreground;
     no-background: rgba(0,0,0,0.0);
     selected-urgent-background: @urgent-background;
     selected-active-background: @active-background;
@@ -32,14 +32,14 @@ configuration {
     location:         north west;
     anchor:           north west;
     x-offset:         0px;
-    y-offset:         -28px;
+    y-offset:         -30px;
     width:            100%;
     children:         [ mainbox ];
 }
 
 #mainbox {
     orientation: vertical;
-    children:    [ horibox, message ];
+    children:    [ horibox ];
     border:      0;
     padding:     0;
     spacing:     0;
@@ -48,19 +48,11 @@ configuration {
 horibox {
     orientation: horizontal;
     children:    [ prompt, textbox-prompt-colon, entry, listview];
-    padding:     6px 0px 0px 0;
-    spacing:     2px;
-}
-
-#message {
-    border:       1px 0px 0px 0px;
-    border-color: @separatorcolor;
-    padding:      4px 10px 6px 10px;
+    padding:     10px 0px 3px 0;
 }
 
 #textbox {
     text-color: @foreground;
-    vertical-align: 0.5;
 }
 
 #listview {
@@ -72,11 +64,12 @@ horibox {
     border-color: @bordercolor;
     spacing:      4px;
     scrollbar:    false;
-    padding:      0 6px 0 0;
+    padding:      0 0 0 0;
 }
 
 #element {
     border:  0;
+    border-radius: 5px;
     padding: 0px 8px;
 }
 
@@ -139,7 +132,7 @@ horibox {
 
 #entry {
     expand:     false;
-    width:      8ch;
+    width:      12ch;
     spacing:    0;
     text-color: @input-foreground;
     padding:    0;
