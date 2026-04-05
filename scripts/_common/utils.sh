@@ -21,11 +21,11 @@ function get_env_file() {
 }
 
 function log() {
-    _internal_log 7 $@
+    _internal_log 7 "$@"
 }
 
 function log_error() {
-    _internal_log 4 $@
+    _internal_log 4 "$@"
 }
 
 function _internal_log() {
