@@ -1,5 +1,3 @@
-/*Dracula theme based on the Purple official rofi theme*/
-
 configuration {
     show-icons:      false;
     display-drun:    "";
@@ -132,7 +130,7 @@ horibox {
 
 #entry {
     expand:     false;
-    width:      12ch;
+    width:      15ch;
     spacing:    0;
     text-color: @input-foreground;
     padding:    0;
