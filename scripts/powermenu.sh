@@ -1,16 +1,18 @@
 #!/usr/bin/env bash
 
-function handle_logout() {
-    hyprctl dispatch exit
+function hypr_shutdown() {
+    local message="$1"
+    local cmd="$2"
+    hyprshutdown -t "$message" --post-cmd "$cmd"
 }
 
 chosen=$(echo -n " Reboot| Lock| Logout| Shutdown| Bios| Cancel" | rofi -sep '|' -dmenu -case-smart -sort -sorting-method fzf -p "")
 
 case $chosen in
-    *Reboot*) systemctl reboot;;
+    *Reboot*) hypr_shutdown 'Restarting...' 'systemctl reboot';;
     *Lock*) loginctl lock-session;;
-    *Logout*) handle_logout;;
-    *Shutdown*) systemctl poweroff;;
-    *Bios*) systemctl reboot --firmware-setup;;
+    *Logout*) hypr_shutdown "Logging out" "hypectl dispatch exit";;
+    *Shutdown*) hypr_shutdown 'Shutting down...' 'systemctl poweroff';;
+    *Bios*) hypr_shutdown 'Restarting to bios...' 'systemctl reboot --firmware-setup';;
     *) echo "none" && exit 0;;
 esac
