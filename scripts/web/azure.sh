@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 
-filename=$(echo "${0%.*}" | xargs basename)
 WORKSPACE=$(echo "${BASH_SOURCE[0]:-0}" | xargs realpath | xargs dirname | xargs dirname)/_common
 
 CACHE_FILE="${XDG_CACHE_HOME:-$HOME/.cache}/azure_${USER}"

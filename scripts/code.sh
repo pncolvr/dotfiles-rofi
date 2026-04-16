@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+WORKSPACE=$(dirname "${BASH_SOURCE[0]:-0}")/_common
+source "$WORKSPACE"/utils.sh
+
 projects="${XDG_CACHE_HOME:-$HOME/.cache}/code_projects_${USER}.json"
 
 function pick() {
@@ -90,7 +93,8 @@ function open_editor() {
 }
 
 function main() {
-  local ignored_category="${1:-}"
+  local ignored_category
+  ignored_category=$(get_ignored_category)
   local path
   local friendly_name
   local window_address
@@ -110,3 +114,4 @@ function main() {
 }
 
 main "$@"
+

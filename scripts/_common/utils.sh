@@ -135,3 +135,15 @@ function list_windows() {
     pkill -RTMIN+1 waybar # send event to the custom windows module to update itself
   done 
 }
+
+function get_ignored_category() {
+  local status
+  status=$($ZDOTDIR/scripts/status-manager.sh --check)
+  if [[ "$status" != "$WORKING_STATE_NAME" ]]; then
+    echo -n "$WORKING_STATE_NAME"
+  else 
+    echo -n ""
+  fi
+}
+
+source "$(get_env_file ${BASH_SOURCE[0]:-0})"
