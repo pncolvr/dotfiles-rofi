@@ -8,6 +8,7 @@ source "$WORKSPACE"/utils.sh
 #     "prompt": "",
 #     "action": "default",
 #     "allowTyped": false,
+#     "allowMultipleSelection": false,
 #     "sort": true,
 #     "items": <result of the js below>
 # }

@@ -8,6 +8,7 @@ TEMPLATE_JSON='{
     "prompt": "",
     "action": "default",
     "allowTyped": false,
+    "allowMultipleSelection": true,
     "sort": true
 }'
 
