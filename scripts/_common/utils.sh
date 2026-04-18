@@ -138,7 +138,7 @@ function list_windows() {
 
 function get_ignored_category() {
   local status
-  status=$($ZDOTDIR/scripts/status-manager.sh --check)
+  status=$($ZDOTDIR/scripts/status/manager.sh --check)
   if [[ "$status" != "$WORKING_STATE_NAME" ]]; then
     echo -n "$WORKING_STATE_NAME"
   else 
