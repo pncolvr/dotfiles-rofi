@@ -3,32 +3,39 @@
 WORKSPACE=$(dirname "${BASH_SOURCE[0]:-0}")/_common
 source "$WORKSPACE"/utils.sh
 
-projects="${XDG_CACHE_HOME:-$HOME/.cache}/code_projects_${USER}.json"
+PROJECTS_JSON="${XDG_CACHE_HOME:-$HOME/.cache}/code_projects_${USER}.json"
 
 function pick() {
   rofi -dmenu -case-smart -sort -sorting-method fzf -p ""
 }
 
 function pick_path() {
-  local ignoredCategory="$1"
-  local projectName
-  projectName=$(get_project_names "$ignoredCategory" | sort | tr '[:upper:]' '[:lower:]' | pick)
-  [ -z "$projectName" ] && exit 0
-  
+  local ignored_category="$1"
+  local project_name project_list
+  project_list=$(get_project_names "$ignored_category")
+  project_name=$(printf "%s\n" "$project_list" | sort | tr '[:upper:]' '[:lower:]' | pick)
+  [ -z "$project_name" ] && exit 0
+  grep -Fxq "$project_name" <<< "$project_list" || exit
   local workspaces
-  workspaces=$(get_workspaces "$projectName")
+  workspaces=$(get_workspaces "$project_name")
   if [ "$workspaces" = "[]" ]; then
-    get_project_path "$projectName"
+    get_project_path "$project_name"
   else
-    local workspaceNames
-    local workspaceName
-    workspaceNames=$(jq -r '[.[] | .name] | sort | .[]' <<< "${workspaces[@]}")
-    workspaceName=$(printf "%s\nOpen folder\n" "${workspaceNames[@]}" | pick)
-    if [ "$workspaceName" = "Open folder" ]; then
-      get_project_path "$projectName"
+    local workspace_names
+    local workspace_name
+    workspace_names=$(jq -r '[.[] | .name] | sort | .[]' <<< "${workspaces[@]}")
+
+    if [[ -z "$workspace_names" ]]; then
+      get_project_path "$project_name"
+      return
+    fi
+
+    workspace_name=$(printf "%s\nOpen folder\n" "${workspace_names[@]}" | pick)
+    if [ "$workspace_name" = "Open folder" ]; then
+      get_project_path "$project_name"
     else 
-      jq -r --arg workspaceName "$workspaceName" \
-        '.[] | select(.name==$workspaceName) | .path' <<< "${workspaces[@]}"
+      jq -r --arg workspace_name "$workspace_name" \
+        '.[] | select(.name==$workspace_name) | .path' <<< "${workspaces[@]}"
     fi
   fi
 }
@@ -36,19 +43,19 @@ function pick_path() {
 function get_project_category_by_path() {
   local path="$1"
   jq -r --arg path "$path" \
-    '.[] | select(.rootPath == $path) | .category' "$projects"
+    '.[] | select(.rootPath == $path) | .category' "$PROJECTS_JSON"
 }
 
 function get_project_names() {
-  local ignoredCategory="${1:-}"
+  local ignored_category="${1:-}"
 
-  if [[ -z "$ignoredCategory" ]]; then
-    jq -r '.[] | .name' "$projects"
+  if [[ -z "$ignored_category" ]]; then
+    jq -r '.[] | .name' "$PROJECTS_JSON"
     return
   fi
 
-  jq -r --arg ignoredCategory "$ignoredCategory" \
-    '.[] | select(.category != $ignoredCategory) | .name' "$projects"
+  jq -r --arg ignored_category "$ignored_category" \
+    '.[] | select(.category != $ignored_category) | .name' "$PROJECTS_JSON"
 }
 
 function get_workspaces() {
@@ -60,10 +67,10 @@ function get_project_path() {
 }
 
 function get_project_property() {
-  local projectName="$1"
+  local project_name="$1"
   local property="$2"
-  jq -r --arg projectName "$projectName" --arg property "$property" \
-    '.[] | select((.name | ascii_downcase) == ($projectName | ascii_downcase)) | .[$property]' "$projects"
+  jq -r --arg project_name "$project_name" --arg property "$property" \
+    '.[] | select((.name | ascii_downcase) == ($project_name | ascii_downcase)) | .[$property]' "$PROJECTS_JSON"
 }
 
 function get_friendly_name() {
