@@ -16,6 +16,5 @@ function handle_remote() {
     base_rdp_params=$(jq -r '.baseRDPParams' "$HOSTS_FILE")
     start_virtual_machine "$name"
     monitor_virtual_machine "$endpoint" "$port" "$name"
-
     handle_rdp "$endpoint" "$port" "$displayName" "$username" "$password" "$base_rdp_params"
 }
