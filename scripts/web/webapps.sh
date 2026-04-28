@@ -6,10 +6,15 @@ source "$WORKSPACE"/utils.sh
 links=$(realpath $(get_env_file ${BASH_SOURCE[0]:-0}))
 selection=$("$WORKSPACE"/handle.sh "$links" )
 
-IFS=';' read action url <<< "$(jq -r '[.action, .url] | join(";")' <<< $selection)"
+IFS=';' read action url execute_before execute_after <<< "$(jq -r '[.action, .url, .executeBefore, .executeAfter] | join(";")' <<< $selection)"
 
 if [[ -z "$action" || -z "$url" ]]; then
     exit
+fi
+
+if [[ -n "$execute_before" ]]; then
+    echo "executing $execute_before"
+    eval "$execute_before"
 fi
 
 case "$action" in
@@ -17,5 +22,10 @@ case "$action" in
         url="$action $url" 
         ;;
 esac
+
+if [[ -n "$execute_after" ]]; then
+    echo "executing $execute_after"
+    eval "$execute_after"
+fi
 
 $ZDOTDIR/scripts/default-browser/default-browser.sh $(printf '%s' "$url")
