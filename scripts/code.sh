@@ -15,7 +15,7 @@ function pick_path() {
   project_list=$(get_project_names "$ignored_category")
   project_name=$(printf "%s\n" "$project_list" | sort | tr '[:upper:]' '[:lower:]' | pick)
   [ -z "$project_name" ] && exit 0
-  grep -Fxq "$project_name" <<< "$project_list" || exit
+  grep -Fxqi "$project_name" <<< "$project_list" || exit
   local workspaces
   workspaces=$(get_workspaces "$project_name")
   if [ "$workspaces" = "[]" ]; then
@@ -121,4 +121,3 @@ function main() {
 }
 
 main "$@"
-
