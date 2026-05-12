@@ -89,13 +89,13 @@ function get_window_address() {
 }
 
 function focus_window() {
-  hyprctl dispatch focuswindow "address:$1"
+  hyprctl dispatch 'hl.dsp.focus({ window = "address:'$1'" })'
 }
 
 function open_editor() {
   local path="$1"
   local profile="${2^}"
-  hyprctl dispatch focuswindow class:code
+  hyprctl dispatch 'hl.dsp.focus({ window = "class:code" })'
   code "$1" --profile "$profile" & disown
 }
 
