@@ -128,13 +128,11 @@ function list_windows() {
     
 
     case "$keycode" in
-    
       0) [ "$index" -ge 0 ] && hyprctl dispatch 'hl.dsp.focus({ window = "address:'"${addresses[$index]}"'" })' && exit 0;;
       10)[ "$index" -ge 0 ] && hyprctl dispatch 'hl.dsp.focus({ window = "address:'"${addresses[$index]}"'" })';;
     esac
     sleep 0.1
-    pkill -RTMIN+1 waybar # send event to the custom windows module to update itself
-  done 
+  done
 }
 
 function get_ignored_category() {
