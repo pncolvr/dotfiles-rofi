@@ -30,7 +30,7 @@ configuration {
     location:         north west;
     anchor:           north west;
     x-offset:         0px;
-    y-offset:         -30px;
+    y-offset:         -31px;
     width:            100%;
     children:         [ mainbox ];
 }

@@ -1,0 +1,132 @@
+configuration {
+    show-icons:      false;
+    display-drun:    "";
+    disable-history: false;
+}
+
+* {
+    font:             "Noto Sans Mono 11";
+    foreground:       #d8dadc;
+    background-color: rgba(0,0,0,0.65);
+    shadow-background: rgba(0,0,0,0.45);
+    no-background:    rgba(0,0,0,0.0);
+    active-background:          #6272a4;
+    urgent-background:          #B80F0A;
+    urgent-foreground:          @foreground;
+    selected-background:        @active-background;
+    selected-foregound:         @foreground;
+    selected-urgent-background: @urgent-background;
+    selected-active-background: @active-background;
+}
+
+#window {
+    transparency:     "real";
+    background-color: @shadow-background;
+    border:           0;
+    padding:          8px;
+    location:         center;
+    anchor:           center;
+    x-offset:         0;
+    y-offset:         0;
+    width:            40%;
+    border-radius:    18px;
+    children:         [ mainbox ];
+}
+
+#mainbox {
+    orientation:      vertical;
+    children:         [ inputbar, listview ];
+    background-color: @background-color;
+    border:           0;
+    border-radius:    12px;
+    padding:          0;
+    spacing:          0;
+}
+
+#inputbar {
+    children:         [ entry ];
+    background-color: @no-background;
+    text-color:       @foreground;
+    border:           0;
+    padding:          8px 14px;
+    spacing:          0;
+}
+
+#entry {
+    expand:           true;
+    background-color: @no-background;
+    text-color:       @foreground;
+    padding:          0;
+    spacing:          0;
+}
+
+#listview {
+    layout:       vertical;
+    flow:         horizontal;
+    columns:      5;
+    lines:        1;
+    dynamic:      true;
+    border:       0;
+    spacing:      0;
+    scrollbar:    false;
+    padding:      0;
+}
+
+#element {
+    border:        0;
+    border-radius: 0;
+    padding:       12px 8px;
+    orientation:   vertical;
+    spacing:       8px;
+}
+
+#element-icon {
+    size:             36px;
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+    background-color: inherit;
+}
+
+#element-text {
+    horizontal-align: 0.5;
+    vertical-align:   0.5;
+    background-color: inherit;
+    text-color:       inherit;
+}
+
+#element.normal.normal {
+    background-color: @no-background;
+    text-color:       @foreground;
+}
+#element.normal.urgent {
+    background-color: @urgent-background;
+    text-color:       @urgent-foreground;
+}
+#element.normal.active {
+    background-color: @no-background;
+    text-color:       @active-background;
+}
+#element.selected.normal {
+    background-color: @selected-background;
+    text-color:       @selected-foregound;
+}
+#element.selected.urgent {
+    background-color: @selected-urgent-background;
+    text-color:       @foreground;
+}
+#element.selected.active {
+    background-color: @selected-active-background;
+    text-color:       @foreground;
+}
+#element.alternate.normal {
+    background-color: @no-background;
+    text-color:       @foreground;
+}
+#element.alternate.urgent {
+    background-color: @urgent-background;
+    text-color:       @foreground;
+}
+#element.alternate.active {
+    background-color: @no-background;
+    text-color:       @active-background;
+}
