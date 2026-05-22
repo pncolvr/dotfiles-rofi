@@ -53,23 +53,25 @@ function handle_title() {
         4) label=$(handle_workspace_4_title "$class" "$title");;
         *) label="$(printf '%s' "$title" | cut -c -100)";;
     esac
-    echo "$workspace $class: $label"
+    # echo "$workspace $class: $label"
+    echo "$label"
 }
 
 function handle_workspace_4_title(){
     class=$1
     windowTitle=$2
-    if [[ "$class" == "code" ]]; then
-        line="${windowTitle%-●}"
-        IFS='-' read -r first _ last <<< "$line"
-        if [[ -n "$last" ]]; then
-            echo "$first ($last)"
-        else
-            echo "$first"
-        fi
-    else
-        echo "$windowTitle"
-    fi
+    echo $windowTitle
+    # if [[ "$class" == "code" ]]; then
+    #     line="${windowTitle%-●}"
+    #     IFS='-' read -r first _ last <<< "$line"
+    #     if [[ -n "$last" ]]; then
+    #         echo "$first ($last)"
+    #     else
+    #         echo "$first"
+    #     fi
+    # else
+    #     echo "$windowTitle"
+    # fi
 }
 
 function get_windows() {
