@@ -10,7 +10,7 @@ configuration {
     input-foreground: @foreground;
     selected-foregound: #000000;
     background-color: rgba(0,0,0, 0.4);
-    active-background: #6272A4;
+    active-background: #6B8FB3;
     urgent-background: #ff5555;
     urgent-foreground: @background-color;
     selected-background: @foreground;
